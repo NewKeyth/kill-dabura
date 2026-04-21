@@ -41,21 +41,6 @@ El proyecto sigue un patrón modular:
     * [Scroll]: Viewport con soporte para rueda de mouse para no romper el margen.
     * [Opciones]: Menú para "Ver en Navegador" o "Descargar".
 
---- 5. PROVEEDORES ACTUALES ---
-- SoloLatino: Implementado y refinado. Usa selectores 'article.item' y '.title a'. 
-  Incluye limpieza de strings para evitar basura de metadatos.
-
---- 6. PRÓXIMOS PASOS ---
-1. Implementar selector de carpeta de descarga persistente.
-2. Agregar Providers: Libreflix (Portugués), Cineby (Inglés), PelisEnHD (España).
-3. Integración directa con reproductores locales (VLC/MPV) mediante flags.
-4. Manejo de Cloudflare/WAF mediante FlareSolverr si fuera necesario.
-
---- 7. CÓMO RETOMAR ---
-1. Entrar a la carpeta: `cd dabura`
-2. Instalar dependencias: `go mod tidy`
-3. Compilar: `go build -o dabura.exe ./cmd/dabura/main.go`
-4. Ejecutar: `./dabura.exe`
 
 ===============================================================================
 "Concepts > Code. No aceptes mediocridad, pibe."

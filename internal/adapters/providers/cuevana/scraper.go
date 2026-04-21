@@ -1,4 +1,3 @@
-package cuevana
 
 import (
 	"context"
@@ -21,12 +20,10 @@ type Provider struct{}
 
 func New() ports.Provider { return &Provider{} }
 
-func (p *Provider) Name() string     { return "Cuevana 3" }
 func (p *Provider) Language() string { return "Latino" }
 
 func (p *Provider) Search(ctx context.Context, query string) ([]domain.Movie, error) {
 	var movies []domain.Movie
-	baseURL := "https://cuevana.biz"
 	searchURL := fmt.Sprintf("%s/?s=%s", baseURL, url.QueryEscape(query))
 
 	c := colly.NewCollector(
@@ -79,7 +76,6 @@ func (p *Provider) Search(ctx context.Context, query string) ([]domain.Movie, er
 		return nil, ctx.Err()
 	case err := <-ch:
 		if err != nil {
-			return nil, fmt.Errorf("error buscando en cuevana: %w", err)
 		}
 	}
 
@@ -106,7 +102,6 @@ type RyusakiStreamResponse struct {
 
 func (p *Provider) ExtractStreamURL(ctx context.Context, movie domain.Movie) ([]domain.StreamOption, error) {
 	var options []domain.StreamOption
-	baseURL := "https://cuevana.biz"
 
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/115.0.0.0 Safari/537.36"),
@@ -133,7 +128,6 @@ func (p *Provider) ExtractStreamURL(ctx context.Context, movie domain.Movie) ([]
 
 	err := c.Visit(movie.URL)
 	if err != nil {
-		return nil, fmt.Errorf("error parseando pelicula cuevana: %w", err)
 	}
 
 	if nonce == "" || tmdbId == "" {
@@ -200,7 +194,6 @@ func (p *Provider) ExtractStreamURL(ctx context.Context, movie domain.Movie) ([]
 					options = append(options, domain.StreamOption{
 						Server:  name,
 						Quality: "HD",
-						URL:     resolveCuevanaRedirects(streamResp.StreamUrl),
 					})
 				}
 			}
@@ -208,18 +201,15 @@ func (p *Provider) ExtractStreamURL(ctx context.Context, movie domain.Movie) ([]
 			options = append(options, domain.StreamOption{
 				Server:  name,
 				Quality: "HD",
-				URL:     resolveCuevanaRedirects(srv.URL),
 			})
 		}
 	}
 
 	if len(options) == 0 {
-		return nil, fmt.Errorf("no stream options found in cuevana")
 	}
 	return options, nil
 }
 
-func resolveCuevanaRedirects(streamURL string) string {
 	if strings.Contains(streamURL, "app.mysync.mov/stream/") {
 		client := &http.Client{Timeout: 10 * time.Second}
 		resp, err := client.Get(streamURL)
