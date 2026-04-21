@@ -1,0 +1,62 @@
+===============================================================================
+                D A B U R A - Buscador de Películas TUI
+===============================================================================
+
+ESTADO DEL PROYECTO: Prototipo Funcional / Fase de Implementación
+FECHA: 20 de marzo de 2026
+ARQUITECTO: Gemini CLI (Senior Architect Mode)
+
+--- 1. EL CONCEPTO ---
+Dabura es una herramienta de terminal (CLI/TUI) diseñada para buscar, ver y 
+descargar películas de diversos proveedores de la red de forma gratuita y sin 
+anuncios. Se enfoca en una experiencia de usuario "fina" (estética profesional, 
+centrada y minimalista) inspirada en herramientas como OpenCode.
+
+--- 2. STACK TECNOLÓGICO ---
+- Lenguaje: Go (Golang) 1.26+
+- Interfaz (TUI): 
+    * github.com/charmbracelet/bubbletea (Manejo de estados MVU)
+    * github.com/charmbracelet/lipgloss (Estilos y layout)
+    * github.com/charmbracelet/bubbles (Componentes: textinput, table, viewport)
+- Motor de Búsqueda: 
+    * github.com/gocolly/colly/v2 (Scraping de alta performance)
+- Backend de Video: 
+    * yt-dlp (Binario externo para extracción de links y descargas)
+    * ffmpeg (Requerido por yt-dlp para unir streams de alta calidad)
+
+--- 3. ARQUITECTURA ---
+El proyecto sigue un patrón modular:
+- /internal/provider: Define la interfaz 'Provider'. Cada sitio (SoloLatino, etc.) 
+  es un módulo independiente. El programa es agnóstico del sitio scrapeado.
+- /internal/tui: Maneja la lógica de la terminal, navegación y renderizado.
+- /internal/downloader: Wrapper sobre yt-dlp para ejecutar comandos de sistema.
+- /internal/config: Manejo de persistencia en JSON (ej: carpeta de descarga).
+
+--- 4. ESTÉTICA Y UX ---
+- Paleta: Rosado (#FF06B7) para el título y resaltado, Blanco (#FFFFFF) para bordes.
+- Bordes: Doble barra gruesa (DoubleBorder) centrada en la terminal.
+- Navegación: 
+    * [Búsqueda]: Input dinámico con placeholder. Cambio de idioma con TAB.
+    * [Resultados]: Tabla estructurada con Título, Año, Rating y Calidad.
+    * [Scroll]: Viewport con soporte para rueda de mouse para no romper el margen.
+    * [Opciones]: Menú para "Ver en Navegador" o "Descargar".
+
+--- 5. PROVEEDORES ACTUALES ---
+- SoloLatino: Implementado y refinado. Usa selectores 'article.item' y '.title a'. 
+  Incluye limpieza de strings para evitar basura de metadatos.
+
+--- 6. PRÓXIMOS PASOS ---
+1. Implementar selector de carpeta de descarga persistente.
+2. Agregar Providers: Libreflix (Portugués), Cineby (Inglés), PelisEnHD (España).
+3. Integración directa con reproductores locales (VLC/MPV) mediante flags.
+4. Manejo de Cloudflare/WAF mediante FlareSolverr si fuera necesario.
+
+--- 7. CÓMO RETOMAR ---
+1. Entrar a la carpeta: `cd dabura`
+2. Instalar dependencias: `go mod tidy`
+3. Compilar: `go build -o dabura.exe ./cmd/dabura/main.go`
+4. Ejecutar: `./dabura.exe`
+
+===============================================================================
+"Concepts > Code. No aceptes mediocridad, pibe."
+===============================================================================

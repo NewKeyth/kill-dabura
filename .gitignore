@@ -1,0 +1,19 @@
+# Binarios de Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+dabura
+
+# Basura de Windows
+Thumbs.db
+Desktop.ini
+
+# Basura de editores
+.vscode/
+.idea/
+*.swp
+
+# Carpeta temporal de Go
+/tmp/
